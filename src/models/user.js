@@ -24,3 +24,50 @@ const { mongoose } = require('../configs/dbConnection')
 }
 /* ------------------------------------------------------- */
 // User Model:
+
+const UserSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        trim: true,
+        required: true,
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        trim: true,
+        required: true,
+        unique: true,
+    },
+    firstName: {
+        type: String,
+        trim: true,
+        required: true,
+    },
+    lastName: {
+        type: String,
+        trim: true,
+        required: true,
+    },
+    isActive: {
+        type: Boolean,
+        default: true,
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    },
+    
+    
+}, {
+    collection: 'users',
+    timestamps: true
+})
+
+
+const passwordEncrypt = require('../helpers/passwordEncrypt')
+
+module.exports=mongoose.model('User', UserSchema)

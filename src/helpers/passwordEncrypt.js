@@ -1,7 +1,6 @@
 "use strict"
-/* -------------------------------------------------------
-    NODEJS EXPRESS | CLARUSWAY FullStack Team
-------------------------------------------------------- */
+
+
 // passwordEncrypt(password:string):
 
 const { pbkdf2Sync } = require('node:crypto'),

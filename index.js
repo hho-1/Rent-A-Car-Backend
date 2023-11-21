@@ -1,7 +1,6 @@
 "use strict"
-/* -------------------------------------------------------
-    NODEJS EXPRESS | CLARUSWAY FullStack Team
-------------------------------------------------------- */
+
+
 const express = require('express')
 const app = express()
 
@@ -56,7 +55,11 @@ app.all('/', (req, res) => {
 })
 
 // Routes:
-app.use(require('./src/routes'))
+//app.use(require('./src/routes'))
+
+app.use('/cars', require('./src/routes/car'))
+app.use('/reservations', require('./src/routes/reservation'))
+app.use('/users', require('./src/routes/user'))
 
 /* ------------------------------------------------------- */
 
