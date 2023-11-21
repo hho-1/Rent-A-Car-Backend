@@ -67,21 +67,31 @@ const UserSchema = new mongoose.Schema({
     timestamps: true
 })
 
+//! Üstte password ve emailde yapacak oldugumuz validate ve set yerine asagidaki gibi de encrypt ve validation islemlerini yapabiliriz.
 
 const passwordEncrypt = require('../helpers/passwordEncrypt')
 
 //! mongoose middleware (Trigger)
-UserSchema.pre('save', function(next){
-    const isMailValidated = this.email ? /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email) : true            //regex ifadelere bu sekilde test yazilabiliyor
+//? save runs only in create
+
+
+UserSchema.pre(['save', 'updateOne'], function(next){           // mongoose arka planda pre-save desteklemedigi icin buraya elle ekleyip o sekilde cözmeye calistik 
+    
+    const data = this?._update || this         //Hem update hem de create'te veriyi dataya atamis olduk
+    console.log(data);
+    
+    const isMailValidated = data.email ? /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email) : true            //regex ifadelere bu sekilde test yazilabiliyor
     //console.log(isMailValidated);
 
     if(isMailValidated){
-        if(this?.password){
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#]).{8,}$/
-            const isPasswordValidated = passwordRegex.test(this.password)
+        if(data.password){
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#+]).{8,}$/
+            const isPasswordValidated = passwordRegex.test(data.password)
 
             if(isPasswordValidated){
-                this.password = passwordEncrypt(this.password)
+                data.password = passwordEncrypt(data.password)
+                this.password = data.password     // for create
+                this._update = data               // for update 
             }
             else{
                 next(new Error('Password is not valid.'))
