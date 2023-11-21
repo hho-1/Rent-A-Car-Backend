@@ -70,4 +70,31 @@ const UserSchema = new mongoose.Schema({
 
 const passwordEncrypt = require('../helpers/passwordEncrypt')
 
+//! mongoose middleware (Trigger)
+UserSchema.pre('save', function(next){
+    const isMailValidated = this.email ? /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email) : true            //regex ifadelere bu sekilde test yazilabiliyor
+    //console.log(isMailValidated);
+
+    if(isMailValidated){
+        if(this?.password){
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#]).{8,}$/
+            const isPasswordValidated = passwordRegex.test(this.password)
+
+            if(isPasswordValidated){
+                this.password = passwordEncrypt(this.password)
+            }
+            else{
+                next(new Error('Password is not valid.'))
+            }
+        }
+        // else{
+        //     next(new Error('Enter password'))
+        // }
+        next()
+    }
+    else{
+        next(new Error('Email is not valid.'))
+    }
+})
+
 module.exports=mongoose.model('User', UserSchema)
