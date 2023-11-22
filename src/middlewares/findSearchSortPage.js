@@ -1,7 +1,6 @@
 "use strict"
-/* -------------------------------------------------------
-    NODEJS EXPRESS | CLARUSWAY FullStack Team
-------------------------------------------------------- */
+
+
 // app.use(findSearchSortPage):
 
 module.exports = (req, res, next) => {  
