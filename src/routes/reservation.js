@@ -5,17 +5,17 @@ const router = require('express').Router()
 /* ------------------------------------------------------- */
 // routes/reservation:
 
-
+const permissions = require('../middlewares/permissions')
 const Reservation = require('../controllers/reservation')
 
 router.route('/')
-        .get(Reservation.list)
-        .post(Reservation.create)
+        .get(permissions.isLogin, Reservation.list)
+        .post(permissions.isLogin, Reservation.create)
 router.route('/:id')
-        .get(Reservation.read)
-        .put(Reservation.update)
-        .patch(Reservation.update)               //patch kismi güncelleme yaparken, put komple güncelleme yapar. express js'de default olan patch oldugu icin put'la göndersek de patch gibi kismi olarak yapmak mümkün
-        .delete(Reservation.delete)
+        .get(permissions.isLogin, Reservation.read)
+        .put(permissions.isAdmin, Reservation.update)
+        .patch(permissions.isAdmin, Reservation.update)               //patch kismi güncelleme yaparken, put komple güncelleme yapar. express js'de default olan patch oldugu icin put'la göndersek de patch gibi kismi olarak yapmak mümkün
+        .delete(permissions.isAdmin,Reservation.delete)
 
         
 module.exports = router

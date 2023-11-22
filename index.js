@@ -24,6 +24,7 @@ dbConnection()
 
 /* ------------------------------------------------------- */
 // Middlewares:
+const permissions = require('./src/middlewares/permissions')
 
 // Accept JSON:
 app.use(express.json())
@@ -56,10 +57,12 @@ app.all('/', (req, res) => {
 
 // Routes:
 //app.use(require('./src/routes'))
+app.use('/auth', require('./src/routes/auth'))
 
 app.use('/cars', require('./src/routes/car'))
 app.use('/reservations', require('./src/routes/reservation'))
 app.use('/users', require('./src/routes/user'))
+app.use('/tokens', require('./src/routes/token'))
 
 /* ------------------------------------------------------- */
 
@@ -71,4 +74,4 @@ app.listen(PORT, HOST, () => console.log(`http://${HOST}:${PORT}`))
 
 /* ------------------------------------------------------- */
 // Syncronization (must be in commentLine):
-// require('./src/helpers/sync')()
+// require('./src/helpers/sync')()                     // helpers'daki sync dosyasindan veri alabilmek icin
