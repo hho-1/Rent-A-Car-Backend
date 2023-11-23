@@ -24,7 +24,7 @@ dbConnection()
 
 /* ------------------------------------------------------- */
 // Middlewares:
-const permissions = require('./src/middlewares/permissions')
+//const permissions = require('./src/middlewares/permissions')
 
 // Accept JSON:
 app.use(express.json())
@@ -57,6 +57,7 @@ app.all('/', (req, res) => {
         user: req.user
     })
 })
+
 
 //Mail with nodemailer
 const nodemailer = require('nodemailer')

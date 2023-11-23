@@ -5,9 +5,9 @@
 
 const Reservation = require('../models/reservation')
 
-module.exports={
-    list: async (req, res) => {
+module.exports = {
 
+    list: async (req, res) => {
         /*
             #swagger.tags = ["Reservations"]
             #swagger.summary = "List Reservations"
@@ -22,21 +22,20 @@ module.exports={
         */
 
         // Filters:
-
         let filters = {}
+        // Only self records. except admin:
+        if (!req?.user.isAdmin) filters.userId = req.user._id
 
-        if(!req?.user.isAdmin) filters.userId = req.user._id
-
-        const data = await res.getModelList(Reservation, filters).populate(['userId', 'carId'])  //find yerine bunu yapiyoruz cünkü pagination sayfasindaki search sort gibi seylerin aktif olabilmesi icin getModelList kullaniyoruz.
+        const data = await res.getModelList(Reservation, filters, ['userId', 'carId'])
 
         res.status(200).send({
             error: false,
-            detail: await res.getModelListDetails(Reservation, filters),
+            details: await res.getModelListDetails(Reservation, filters),
             data
         })
     },
-    create: async (req, res) => {
 
+    create: async (req, res) => {
         /*
             #swagger.tags = ["Reservations"]
             #swagger.summary = "Create Reservation"
@@ -47,34 +46,39 @@ module.exports={
             }
         */
 
-        req.body.userId = req?.user._id
+        // get userId from loginedUser.
+        req.body.userId = req?.user._id;
 
-        //check new reservations date in existing reservations
-        const userReservationInDates = await Reservation.findOne({
+        // Check new reservations date in exists reservations:
+        const userRevervationsInDates = await Reservation.findOne({
             userId: req.body.userId,
-            $nor:[
-                {startDate: {$gt: req.body.endDate}},
-                {endDate: {$lt: req.body.startDate}}
+            $nor: [
+                { startDate: { $gt: req.body.endDate } },
+                { endDate: { $lt: req.body.startDate } },
             ]
         })
 
-        if(userReservationInDates){
-            res.errorStatusCode = 400
-            throw new error("You cannot rent another car between the same dates", { cause: {userReservationInDates}})
-        }
-        else{
-            const data = await Reservation.create(req.body)
+        if (userRevervationsInDates) {
 
+            res.errorStatusCode = 400
+            // throw new Error('It cannot be added because there is another reservation with the same date.')
+            throw new Error(
+                'It cannot be added because there is another reservation with the same date.',
+                { cause: { userRevervationsInDates }  }
+            )
+
+        } else {
+
+            const data = await Reservation.create(req.body)
+    
             res.status(201).send({
                 error: false,
                 data
             })
         }
-
-        
     },
-    read: async (req, res) => {
 
+    read: async (req, res) => {
         /*
             #swagger.tags = ["Reservations"]
             #swagger.summary = "Get Single Reservation"
@@ -82,18 +86,18 @@ module.exports={
 
         // Filters:
         let filters = {}
+        // Only self records. except admin:
+        if (!req?.user.isAdmin) filters.userId = req.user._id
 
-        if(!req?.user.isAdmin) filters.userId = req.user._id
-
-        const data = await Reservation.findOne({_id: req.params.id, ...filters}).populate(['userId', 'carId'])
+        const data = await Reservation.findOne({ _id: req.params.id, ...filters }).populate(['userId', 'carId'])
 
         res.status(200).send({
             error: false,
             data
         })
     },
-    update: async (req, res) => {
 
+    update: async (req, res) => {
         /*
             #swagger.tags = ["Reservations"]
             #swagger.summary = "Update Reservation"
@@ -105,24 +109,30 @@ module.exports={
             }
         */
 
-        const data = await Reservation.updateOne({_id: req.params.id}, req.body, {runValidators: true})
+        const data = await Reservation.updateOne({ _id: req.params.id }, req.body, { runValidators: true })
 
         res.status(202).send({
             error: false,
             data,
-            new: await Reservation.findOne({_id: req.params.id})
+            new: await Reservation.findOne({ _id: req.params.id })
         })
     },
-    delete: async (req, res) => {
 
+    delete: async (req, res) => {
         /*
             #swagger.tags = ["Reservations"]
             #swagger.summary = "Delete Reservation"
         */
-       
-        const data = await Reservation.deleteOne({_id: req.params.id})
 
-        res.status(data.deletedCount ? 202 : 404).send({
+        const data = await Reservation.deleteOne({ _id: req.params.id })
+
+        // res.status(204).send({
+        //     error: false,
+        //     data
+        // })
+
+        const statusCode = data.deletedCount ? 204 : 404
+        res.status(statusCode).send({
             error: false,
             data
         })
