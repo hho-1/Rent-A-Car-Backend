@@ -11,6 +11,20 @@ const passwordEncrypt = require('../helpers/passwordEncrypt')
 
 module.exports={
     list: async (req, res) => {
+
+        /*
+            #swagger.tags = ["Cars"]
+            #swagger.summary = "List Cars"
+            #swagger.description = `
+                You can send query with endpoint for search[], sort[], page and limit.
+                <ul> Examples:
+                    <li>URL/?<b>search[field1]=value1&search[field2]=value2</b></li>
+                    <li>URL/?<b>sort[field1]=1&sort[field2]=-1</b></li>
+                    <li>URL/?<b>page=2&limit=1</b></li>
+                </ul>
+            `
+        */
+
         const data = await res.getModelList(User)   //find yerine bunu yapiyoruz cünkü pagination sayfasindaki search sort gibi seylerin aktif olabilmesi icin getModelList kullaniyoruz.
 
         res.status(200).send({
@@ -20,6 +34,16 @@ module.exports={
         })
     },
     create: async (req, res) => {
+
+        /*
+            #swagger.tags = ["Cars"]
+            #swagger.summary = "Create Car"
+            #swagger.parameters['body'] = {
+                in: 'body',
+                required: true,
+                schema: { }
+            }
+        */
 
         const data = await User.create(req.body)
 
@@ -33,6 +57,11 @@ module.exports={
         })
     },
     read: async (req, res) => {
+
+        /*
+            #swagger.tags = ["Cars"]
+            #swagger.summary = "Get Single Car"
+        */
 
         // Filters:
         let filters = {}
@@ -48,6 +77,17 @@ module.exports={
         })
     },
     update: async (req, res) => {
+
+        /*
+            #swagger.tags = ["Cars"]
+            #swagger.summary = "Update Car"
+            #swagger.parameters['body'] = {
+                in: 'body',
+                required: true,
+                schema: {
+                }
+            }
+        */
 
         // Filters:
         let filters = {}
