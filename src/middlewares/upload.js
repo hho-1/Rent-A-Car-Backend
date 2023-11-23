@@ -10,9 +10,10 @@ const multer = require('multer')
 
 module.exports = multer({
     storage: multer.diskStorage({
-        destination: './upload/',
-        filename: function(req, file, returnCallback) {
-            returnCallback(null, file.originalname)
+        destination: './upload',          // Bunu yapinca solda upload isminde bir klasör olustu
+        filename: function(req, file, returnCallback){
+                //returnCallback(error, this.filename)
+                returnCallback(null, file.originalname)     // Orijinal ismiyle kaydetmek icin
         }
     })
 })

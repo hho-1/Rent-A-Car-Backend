@@ -27,7 +27,7 @@ module.exports={
 
         if(!req?.user.isAdmin) filters.userId = req.user._id
 
-        const data = await res.getModelList(Reservation, filters)   //find yerine bunu yapiyoruz cünkü pagination sayfasindaki search sort gibi seylerin aktif olabilmesi icin getModelList kullaniyoruz.
+        const data = await res.getModelList(Reservation, filters).populate(['userId', 'carId'])  //find yerine bunu yapiyoruz cünkü pagination sayfasindaki search sort gibi seylerin aktif olabilmesi icin getModelList kullaniyoruz.
 
         res.status(200).send({
             error: false,
@@ -49,12 +49,29 @@ module.exports={
 
         req.body.userId = req?.user._id
 
-        const data = await Reservation.create(req.body)
-
-        res.status(201).send({
-            error: false,
-            data
+        //check new reservations date in existing reservations
+        const userReservationInDates = await Reservation.findOne({
+            userId: req.body.userId,
+            $nor:[
+                {startDate: {$gt: req.body.endDate}},
+                {endDate: {$lt: req.body.startDate}}
+            ]
         })
+
+        if(userReservationInDates){
+            res.errorStatusCode = 400
+            throw new error("You cannot rent another car between the same dates", { cause: {userReservationInDates}})
+        }
+        else{
+            const data = await Reservation.create(req.body)
+
+            res.status(201).send({
+                error: false,
+                data
+            })
+        }
+
+        
     },
     read: async (req, res) => {
 

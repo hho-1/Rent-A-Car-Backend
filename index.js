@@ -29,6 +29,9 @@ const permissions = require('./src/middlewares/permissions')
 // Accept JSON:
 app.use(express.json())
 
+//Call static files from uploadFiles
+app.use('./img', express.static('./upload'))       // Bunu yapmazsan frontend yani browser resmi görüntüleyemez
+
 // Check Authentication:
 app.use(require('./src/middlewares/authentication'))
 
@@ -54,6 +57,49 @@ app.all('/', (req, res) => {
         user: req.user
     })
 })
+
+//Mail with nodemailer
+const nodemailer = require('nodemailer')
+
+// Create Test (Fake) Account:
+// nodemailer.createTestAccount().then((email) => console.log(email))     // Tek sefer calistirip kapatalim, yoksa sürekli yeni mail verir
+/* const transporter = nodemailer.createTransport({     //connect to mail service
+    host: 'smtp.ethereal.email',
+    port: 587,
+    secure: false,   // piyasa alternatifleri tls ya da ssl
+    auth:{
+        user: 'kbvkhvkjhbkjhbkjhbjkh@ethereal.mail',        //Bize verilen mail adresi
+        pass: 'jhogoihpjhökjökj'
+    }
+})  */ 
+/* transporter.sendMail({
+    from: 'kbvkhvkjhbkjhbkjhbjkh@ethereal.mail',
+    to: 'sbfgbgbggbg@example.com',
+    subject: 'jhhoh',
+    text: ' Hello',
+    html: '<b>Hello there</b>'         // text'le ayni sey. html de biray daha süsleyebiliyorsunuz
+}, (error, success) => {
+    error ? console.log(error) : console.log('Successful');
+}) */
+
+//?Email with Gmail
+
+const transporter = nodemailer.createTransport({     //connect to mail service
+    service: 'gmail',   // piyasa alternatifleri tls ya da ssl
+    auth:{
+        user: 'hakkioglu19@gmail.com',        
+        pass: 'jhogoihpjhökjökj'         //Buraya gmail sifremizi yazmiyoruz, bunun yerine gmailden bir sifre isteyip onu girecegiz. Google > AccountHome > Securoty > Two-Step Verification > App PAsswords
+    }
+}) 
+/* transporter.sendMail({
+    from: 'kbvkhvkjhbkjhbkjhbjkh@ethereal.mail',
+    to: 'sbfgbgbggbg@example.com',
+    subject: 'jhhoh',
+    text: ' Hello',
+    html: '<b>Hello there</b>'         // text'le ayni sey. html de biray daha süsleyebiliyorsunuz
+}, (error, successInfo) => {
+    error ? console.log(error) : console.log('Success: ' + successInfo);
+}) */
 
 // Routes:
 //app.use(require('./src/routes'))

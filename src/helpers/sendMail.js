@@ -1,6 +1,7 @@
 "use strict"
 
 
+
 // node i nodemailer
 // sendMail(to:string, subject:string, message:string):
 
@@ -8,64 +9,27 @@ const nodemailer = require('nodemailer')
 
 module.exports = function (to, subject, message) {
 
-    // Create Test Account:
-    // nodemailer.createTestAccount().then((email) => console.log(email))
-    
-    // // Email Account Details:
-    // const emailSettings = {
-    //     user: 'rnspsyvy3w3kztdn@ethereal.email',
-    //     pass: 'hPU1v5CZqgf2DwD2jX',
-    //     smtp: { host: 'smtp.ethereal.email', port: 587, secure: false },
-    // }
-    // const transporter = nodemailer.createTransport({
-    //     host: emailSettings.smtp.host,
-    //     port: emailSettings.smtp.port,
-    //     secure: emailSettings.smtp.secure,
-    //     auth: {
-    //         user: emailSettings.user,
-    //         pass: emailSettings.pass,
-    //     }
-    // });
+    return false;
 
-    //? GoogleMail Account Details:
+    //? GoogleMail (gmail):
     // Google -> AccountHome -> Security -> Two-Step-Verify -> App-Passwords
-    const emailSettings = {
-        service: 'gmail',
-        user: 'youremail@gmail.com',
-        pass: 'password' // https://myaccount.google.com/u/1/apppasswords
-    }
-
-    // //? YandexMail Account Details:
-    // const emailSettings = {
-    //     service: 'yandex',
-    //     user: 'username@yandex.com',
-    //     pass: 'password'
-    // }
-
-    // Connect to server with emailSettings:
     const transporter = nodemailer.createTransport({
-        service: emailSettings.service,
+        service: 'gmail',
         auth: {
-            user: emailSettings.user,
-            pass: emailSettings.pass,
+            user: 'qadiradamson@gmail.com',
+            pass: '---' // special pass from appPasswords
         }
-    });
+    })
 
-    // MessageDetails:
-    const emailContent = {
-        from: emailSettings.user,
+    transporter.sendMail({
+        from: 'qadiradamson@gmail.com',
         to: to,
         subject: subject,
+        // Message:
         text: message,
-        html: message
-    };
+        html: message,
+    }, (error, successInfo) => {
+        error ? console.log('Error:', error) : console.log('Success:', successInfo)
+    })
 
-    // sendMail:
-    transporter.sendMail(emailContent, (error, info) => {
-        if (error) {
-            console.log('ERROR', error);
-        } else {
-            console.log('SUCCESS', info)
-        }
-    });
 }

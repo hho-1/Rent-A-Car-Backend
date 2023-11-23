@@ -5,6 +5,9 @@
 
 
 const User = require('../models/user')
+const Token = require('../models/token')
+const passwordEncrypt = require('../helpers/passwordEncrypt')
+
 
 module.exports={
     list: async (req, res) => {
@@ -20,13 +23,24 @@ module.exports={
 
         const data = await User.create(req.body)
 
+        let tokenKey = passwordEncrypt(data._id + Date.now())
+        let tokenData = await Token.create({ userId: data._id, token:tokenKey })
+
         res.status(201).send({
             error: false,
+            token: tokenData.token,
             data
         })
     },
     read: async (req, res) => {
-        const data = await User.findOne({_id: req.params.id})
+
+        // Filters:
+        let filters = {}
+
+        if(!req?.user.isAdmin) filters._id = req.user._id
+
+
+        const data = await User.findOne({_id: req.params.id, ...filters})
 
         res.status(200).send({
             error: false,
@@ -34,7 +48,16 @@ module.exports={
         })
     },
     update: async (req, res) => {
-        const data = await User.updateOne({_id: req.params.id}, req.body, {runValidators: true})
+
+        // Filters:
+        let filters = {}
+
+        if(!req?.user.isAdmin) {
+            filters._id = req.user._id
+            req.body.isAdmin = false           // Kendisini admin yapamasin diye
+        }
+
+        const data = await User.updateOne({_id: req.params.id, ...filters}, req.body, {runValidators: true})
 
         res.status(202).send({
             error: false,

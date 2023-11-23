@@ -15,6 +15,7 @@
   - can see the list of their reservations including past ones.
   - can list, create, read their reservations.
   - can not update, delete reservations.
+  - get e-mails when they become member, rent a car, make a reservation etc.
 
 - Admins;
   - can make CRUD operations on Car table,

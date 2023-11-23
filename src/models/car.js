@@ -61,9 +61,13 @@ const CarSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    isPublished: {
+    isPublish: {
         type: Boolean,
         default: true,
+    },
+    images: {
+        type: Array,
+        default: []
     },
     createdId:{
         type: mongoose.Schema.Types.ObjectId,

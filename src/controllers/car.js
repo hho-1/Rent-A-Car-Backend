@@ -110,6 +110,17 @@ module.exports={
                 }
             }
         */
+
+        
+
+        req.body.images = req.body?.images || []
+
+        for(let file of req.files){
+            req.body.images.push('/img/' + file.originalname)
+        }
+        console.log(req.body.images);
+
+
         if (req?.user) {
                 // Set userIds from login info:
         
