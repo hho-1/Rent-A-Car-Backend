@@ -23,10 +23,10 @@ const upload = require('../middlewares/upload')
 
 router.route('/')
         .get(car.list)
-        .post(permissions.isAdmin, car.create)          //upload.single: tek dosya yükleme, image --> field adi, upload.array: Birden fazla dosya yükleme
+        .post(permissions.isAdmin, upload.array('images'), car.create)          //upload.single: tek dosya yükleme, image --> field adi, upload.array: Birden fazla dosya yükleme
 router.route('/:id')
         .get(car.read)
-        .put(permissions.isAdmin, upload.array('image'), car.update)                  //upload.any: cok güvenilir degil, array kullanmak en mantiklisi
+        .put(permissions.isAdmin, upload.array('images'), car.update)                  //upload.any: cok güvenilir degil, array kullanmak en mantiklisi
         .patch(permissions.isAdmin, car.update)               //patch kismi güncelleme yaparken, put komple güncelleme yapar. express js'de default olan patch oldugu icin put'la göndersek de patch gibi kismi olarak yapmak mümkün
         .delete(permissions.isAdmin, car.delete)
 

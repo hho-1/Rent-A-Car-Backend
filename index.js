@@ -69,8 +69,8 @@ const nodemailer = require('nodemailer')
     port: 587,
     secure: false,   // piyasa alternatifleri tls ya da ssl
     auth:{
-        user: 'kbvkhvkjhbkjhbkjhbjkh@ethereal.mail',        //Bize verilen mail adresi
-        pass: 'jhogoihpjhökjökj'
+        user: 'aotin55drlsxohcc@ethereal.email',        //Bize verilen mail adresi
+        pass: 'Q9uAt6x96X79jacPyp'
     }
 })  */ 
 /* transporter.sendMail({
@@ -92,9 +92,17 @@ const transporter = nodemailer.createTransport({     //connect to mail service
         pass: 'jhogoihpjhökjökj'         //Buraya gmail sifremizi yazmiyoruz, bunun yerine gmailden bir sifre isteyip onu girecegiz. Google > AccountHome > Securoty > Two-Step Verification > App PAsswords
     }
 }) 
+//? YandexMail (yandex):
+// const transporter = nodemailer.createTransport({
+//     service: 'Yandex',
+//     auth: {
+//         user: 'username@yandex.com',
+//         pass: 'password' // your emailPassword
+//     }
+// })
 /* transporter.sendMail({
-    from: 'kbvkhvkjhbkjhbkjhbjkh@ethereal.mail',
-    to: 'sbfgbgbggbg@example.com',
+    from: 'hakkioglu19@gmail.com',
+    to: 'qadir@clarusway.com',
     subject: 'jhhoh',
     text: ' Hello',
     html: '<b>Hello there</b>'         // text'le ayni sey. html de biray daha süsleyebiliyorsunuz

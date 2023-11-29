@@ -75,7 +75,7 @@ const passwordEncrypt = require('../helpers/passwordEncrypt')
 //? save runs only in create
 
 
-UserSchema.pre(['save', 'updateOne'], function(next){           // mongoose arka planda pre-save desteklemedigi icin buraya elle ekleyip o sekilde cözmeye calistik 
+UserSchema.pre(['save', 'updateOne'], function(next){            
     
     const data = this?._update || this         //Hem update hem de create'te veriyi dataya atamis olduk
     console.log(data);
